@@ -13,7 +13,7 @@ extern volatile uint16_t y_coordinate;
 extern volatile uint16_t orientation;
 extern volatile char status;
 
-typedef enum { IDLE, STUCK, ROTATING, ERROR, MOVING } motion_status;
+typedef enum { IDLE_MOTION, STUCK, ROTATING, ERROR, MOVING } motion_status;
 
 typedef struct {
 	uint16_t x;

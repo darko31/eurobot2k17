@@ -135,7 +135,7 @@ static void timer10_config(void)
 	timer_enable_counter(TIM10);
 }
 
-/* Configured as external counter for color sensnor */
+/* Configured as external counter for color sensor */
 
 static void timer12_config(void)
 {

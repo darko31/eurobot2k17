@@ -7,23 +7,12 @@ volatile char status;
 
 volatile motion_state state;
 
-void tim7_isr(void)
-{
+uint16_t x_coordinate_desired;
+uint16_t y_coordinate_desired;
+uint16_t orientation_desired;
+char status_desired;
 
-	if (timer_get_flag(TIM7, TIM_SR_UIF)) {
-
-			usart_send_blocking(UART4, 'S');
-			state.status = usart_recv_blocking(UART4);
-			state.x = (usart_recv_blocking(UART4) << 8 ) | (usart_recv_blocking(UART4) & 0xff);
-			state.y = (usart_recv_blocking(UART4) << 8 ) | (usart_recv_blocking(UART4) & 0xff);
-			state.orientation = ( usart_recv_blocking(UART4) << 8 ) | (usart_recv_blocking(UART4) & 0xff);
-
-			/* Clear overflow interrupt flag. */
-			timer_clear_flag(TIM7, TIM_SR_UIF);
-
-	}
-
-}
+motion_state state_desired;
 
 
 void set_position_and_orientation(int16_t x, int16_t y, int16_t orientation)
@@ -56,7 +45,7 @@ void read_status_and_position(void)
 	switch (new_state[0])
 	{
 		case 'I':
-			state.status = IDLE;
+			state.status = IDLE_MOTION;
 			break;
 		case 'M':
 			state.status = MOVING;
@@ -90,17 +79,19 @@ void set_motion_speed(int8_t speed)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
 }
 
-void move_forward(int16_t dist, int8_t end_speed)
+void move_forward(int16_t dist)
 {
 	int8_t out_data[4];
 
 	out_data[0] = 'D';
 	out_data[1] = dist>>8;
 	out_data[2] = dist&0xff;
-	out_data[3] = end_speed;
+	out_data[3] = 0;
 
 	for (int8_t i = 0; i < 4; ++i)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
+
+	state_desired.status=MOVING;
 }
 
 void rotate_for(int16_t angle)
@@ -113,6 +104,8 @@ void rotate_for(int16_t angle)
 
 	for (int8_t i = 0; i < 3; ++i)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
+
+	state_desired.status=ROTATING;
 }
 
 void rotate_to(int16_t angle)
@@ -125,9 +118,11 @@ void rotate_to(int16_t angle)
 
 	for (int8_t i = 0; i < 3; ++i)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
+
+	state_desired.status=ROTATING;
 }
 
-void goto_xy(int16_t x, int16_t y, int8_t end_speed, int8_t direction)
+void goto_xy(int16_t x, int16_t y, int8_t direction)
 {
 	int8_t out_data[7];
 
@@ -136,11 +131,13 @@ void goto_xy(int16_t x, int16_t y, int8_t end_speed, int8_t direction)
 	out_data[2] = x&0xff;
 	out_data[3] = y>>8;
 	out_data[4] = y&0xff;
-	out_data[5] = end_speed;
+	out_data[5] = 0;
 	out_data[6] = direction;
 
 	for (int8_t i = 0; i < 7; ++i)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
+
+	state_desired.status=MOVING;
 }
 
 void curve(int16_t x, int16_t y, int8_t angle, int8_t angle_direction, int8_t direction)
@@ -158,21 +155,26 @@ void curve(int16_t x, int16_t y, int8_t angle, int8_t angle_direction, int8_t di
 
 	for (int8_t i = 0; i < 8; ++i)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
+
+	state_desired.status=MOVING;
 }
 
 void hard_stop(void)
 {
 	usart_send_blocking(MOTION_DRIVER, 'S');
+	state_desired.status=IDLE_MOTION;
 }
 
 void soft_stop(void)
 {
 	usart_send_blocking(MOTION_DRIVER, 's');
+	state_desired.status=IDLE_MOTION;
 }
 
 void reset_driver(void)
 {
 	usart_send_blocking(MOTION_DRIVER, 'R');
+	state_desired.status=IDLE_MOTION;
 }
 
 void stuck_enable(void)

@@ -23,6 +23,7 @@ typedef struct {
 } motion_state;
 
 extern volatile motion_state state;
+motion_state state_desired;
 
 /** \file motion.h
  * \brief Motion driver functions
@@ -67,7 +68,7 @@ void read_status_and_position(void);
  * @param dist [in] Distance to travel in millimeters
  * @param end_speed [in] Speed at which the movement is finished. Must be zero.
  */
-void move_forward(int16_t dist, int8_t end_speed);
+void move_forward(int16_t dist);
 /** \fn void rotate_for(int16_t angle)
  * \brief Rotate the robot for the desired angle
  *
@@ -90,7 +91,7 @@ void rotate_to(int16_t angle);
  * @param end_speed [in] Speed at which the movement is finished. Must be zero.
  * @param direction [in] If positive, move forwards, otherwise move backwards
  */
-void goto_xy(int16_t x, int16_t y, int8_t end_speed, int8_t direction);
+void goto_xy(int16_t x, int16_t y, int8_t direction);
 /** \fn void curve(int16_t x, int16_t y, int8_t angle, int8_t angle_direction, int8_t direction)
  * \brief Move along a curve
  *

@@ -24,11 +24,18 @@ void main(void)
 	ctor_test_1();
 	ctor_test_2();
 
+	reset_driver();
+
 //	task_mngr_run();
+//	goto_xy(100, 100, 1);
 
 	while (1) {
 		gpio_toggle(BLUE_LED);
 		delay(16800000);
+		usart_send_blocking(USART3, state.x);
+		usart_send_blocking(USART3, state.y);
+		usart_send_blocking(USART3, state.orientation);
+
 
 	}
 

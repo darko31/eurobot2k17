@@ -1,4 +1,5 @@
-#include <drivers/sensors/digital/optical_sensors.h>
+#include "optical_sensors.h"
+#include "../../actuators/motion/motion.h"
 
 /* ISR for Sensor0 */
 void exti0_isr(void){
@@ -6,12 +7,14 @@ void exti0_isr(void){
 	if (gpio_get(GPIOB, GPIO0)){
 
 		/* Here goes code when something is detected */
+		hard_stop();
 
 	}
 
 	else {
 
 		/* Here goes code when there is not anything in front of the sensor */
+		check_goal();
 
 	}
 

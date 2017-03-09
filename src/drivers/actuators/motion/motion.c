@@ -6,13 +6,14 @@ volatile uint16_t orientation;
 volatile char status;
 
 volatile motion_state state;
+motion_state state_desired;
 
 uint16_t x_coordinate_desired;
 uint16_t y_coordinate_desired;
 uint16_t orientation_desired;
 char status_desired;
 
-motion_state state_desired;
+
 
 
 void set_position_and_orientation(int16_t x, int16_t y, int16_t orientation)
@@ -92,6 +93,7 @@ void move_forward(int16_t dist)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
 
 	state_desired.status=MOVING;
+	while (state.status!=IDLE_MOTION);
 }
 
 void rotate_for(int16_t angle)
@@ -138,6 +140,9 @@ void goto_xy(int16_t x, int16_t y, int8_t direction)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
 
 	state_desired.status=MOVING;
+	state_desired.x=x;
+	state_desired.y=y;
+	while (state.status!=IDLE_MOTION);
 }
 
 void curve(int16_t x, int16_t y, int8_t angle, int8_t angle_direction, int8_t direction)

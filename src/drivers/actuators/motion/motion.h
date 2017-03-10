@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "../../../initialisation/uart_config.h"
 #include "../../../initialisation/timer_config.h"
+#include "../../../initialisation/gpio_config.h"
 
 
 #define MOTION_DRIVER UART4
@@ -92,6 +93,7 @@ void rotate_to(int16_t angle);
  * @param direction [in] If positive, move forwards, otherwise move backwards
  */
 void goto_xy(int16_t x, int16_t y, int8_t direction);
+void goto_xy_continue(int16_t x, int16_t y, int8_t direction);
 /** \fn void curve(int16_t x, int16_t y, int8_t angle, int8_t angle_direction, int8_t direction)
  * \brief Move along a curve
  *

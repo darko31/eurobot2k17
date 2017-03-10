@@ -28,8 +28,8 @@ void main(void)
 	set_motion_speed(40);
 
 //	task_mngr_run();
-//	goto_xy(1000, 0, 1);
-	gpio_set(ORANGE_LED);
+	goto_xy(500, 0, 1);
+	goto_xy(500, 500, 1);
 
 	while (1) {
 		gpio_toggle(RED_LED);

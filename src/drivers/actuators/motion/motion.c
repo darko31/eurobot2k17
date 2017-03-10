@@ -42,7 +42,8 @@ void read_status_and_position(void)
 
 	for (int8_t i = 0; i < 7; ++i)
 	{
-		new_state[i] = usart_recv_blocking(MOTION_DRIVER);
+		new_state[i] = usart_recv(MOTION_DRIVER);
+		delay(100);
 	}
 	switch (new_state[0])
 	{
@@ -63,12 +64,11 @@ void read_status_and_position(void)
 			break;
 
 	}
+	status=state.status;
 
 	state.x           = new_state[1]<<8 | new_state[2];
 	state.y           = new_state[3]<<8 | new_state[4];
 	state.orientation = new_state[5]<<8 | new_state[6];
-
-	while(state.status != IDLE_MOTION);
 
 }
 
@@ -96,7 +96,7 @@ void move_forward(int16_t dist)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
 
 	state_desired.status=MOVING;
-	while (state.status!=IDLE_MOTION);
+	//while (state.status!=IDLE_MOTION);
 }
 
 void rotate_for(int16_t angle)
@@ -142,10 +142,34 @@ void goto_xy(int16_t x, int16_t y, int8_t direction)
 	for (int8_t i = 0; i < 7; ++i)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
 
-	state_desired.status=MOVING;
+	//state_desired.status=MOVING;
 	state_desired.x=x;
 	state_desired.y=y;
-	while (state.status!=IDLE_MOTION);
+
+	if (state.status!=IDLE_MOTION){
+		gpio_set(GREEN_LED);
+	}
+
+	while(state.status!=IDLE_MOTION){
+		delay(100);
+	}
+
+}
+
+void goto_xy_continue(int16_t x, int16_t y, int8_t direction)
+{
+	int8_t out_data[7];
+
+	out_data[0] = 'G';
+	out_data[1] = x>>8;
+	out_data[2] = x&0xff;
+	out_data[3] = y>>8;
+	out_data[4] = y&0xff;
+	out_data[5] = 0;
+	out_data[6] = direction;
+
+	for (int8_t i = 0; i < 7; ++i)
+		usart_send_blocking(MOTION_DRIVER, out_data[i]);
 }
 
 void curve(int16_t x, int16_t y, int8_t angle, int8_t angle_direction, int8_t direction)

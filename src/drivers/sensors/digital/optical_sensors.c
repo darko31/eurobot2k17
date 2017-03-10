@@ -1,5 +1,5 @@
 #include "optical_sensors.h"
-#include "../../actuators/motion/motion.h"
+#include "../../../executors/motion_executor/motion_executor.h"
 
 /* ISR for Sensor0 */
 void exti0_isr(void){
@@ -8,6 +8,7 @@ void exti0_isr(void){
 
 		/* Here goes code when something is detected */
 		hard_stop();
+		gpio_set(GPIOD, GPIO13);
 
 	}
 
@@ -15,6 +16,7 @@ void exti0_isr(void){
 
 		/* Here goes code when there is not anything in front of the sensor */
 		check_goal();
+		gpio_clear(GPIOD, GPIO13);
 
 	}
 

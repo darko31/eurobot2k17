@@ -41,8 +41,9 @@ void read_status_and_position(void)
 	usart_send_blocking(MOTION_DRIVER, 'P');
 
 	for (int8_t i = 0; i < 7; ++i)
+	{
 		new_state[i] = usart_recv_blocking(MOTION_DRIVER);
-
+	}
 	switch (new_state[0])
 	{
 		case 'I':
@@ -66,6 +67,8 @@ void read_status_and_position(void)
 	state.x           = new_state[1]<<8 | new_state[2];
 	state.y           = new_state[3]<<8 | new_state[4];
 	state.orientation = new_state[5]<<8 | new_state[6];
+
+	while(state.status != IDLE_MOTION);
 
 }
 

@@ -8,7 +8,7 @@ void tim7_isr(void)
 	if (timer_get_flag(TIM7, TIM_SR_UIF))
 	{
 
-		read_status_and_position();
+		//read_status_and_position();
 		//check_goal();
 
 		colour_shift_count();

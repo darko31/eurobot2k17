@@ -25,18 +25,15 @@ void main(void)
 	ctor_test_2();
 
 	reset_driver();
+	set_motion_speed(40);
 
 //	task_mngr_run();
-//	goto_xy(100, 100, 1);
+//	goto_xy(1000, 0, 1);
+	gpio_set(ORANGE_LED);
 
 	while (1) {
-		gpio_toggle(BLUE_LED);
+		gpio_toggle(RED_LED);
 		delay(16800000);
-		usart_send_blocking(USART3, state.x);
-		usart_send_blocking(USART3, state.y);
-		usart_send_blocking(USART3, state.orientation);
-
-
 	}
 
 }

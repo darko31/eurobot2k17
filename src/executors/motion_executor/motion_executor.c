@@ -30,6 +30,11 @@ void check_goal(){
 		&& ((state.y >= state_desired.y + HITBOX) || (state.y <= state_desired.y - HITBOX)))
 	{
 		goto_xy_continue(state_desired.x, state_desired.y, 1);
+		moving_delay=0;
+		while (moving_delay<5){
+			__asm__("nop");
+		}
+
 		hard_stop_flag=0;
 
 	}

@@ -5,6 +5,7 @@
 #include "../../../initialisation/uart_config.h"
 #include "../../../initialisation/timer_config.h"
 #include "../../../initialisation/gpio_config.h"
+#include "../../../utils/logger.h"
 
 
 #define MOTION_DRIVER UART4
@@ -13,6 +14,9 @@ extern volatile uint16_t x_coordinate;
 extern volatile uint16_t y_coordinate;
 extern volatile uint16_t orientation;
 extern volatile char status;
+extern volatile uint8_t moving_delay;
+extern volatile uint8_t hard_stop_flag;
+
 
 typedef enum { IDLE_MOTION, STUCK, ROTATING, ERROR, MOVING } motion_status;
 

@@ -15,8 +15,8 @@ void exti0_isr(void){
 	else {
 
 		/* Here goes code when there is not anything in front of the sensor */
-		check_goal();
 		gpio_clear(GPIOD, GPIO13);
+		check_goal();
 
 	}
 

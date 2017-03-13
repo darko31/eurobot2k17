@@ -27,6 +27,7 @@ void main(void)
 	reset_driver();
 	set_motion_speed(40);
 
+	state.status=IDLE_MOTION;
 //	task_mngr_run();
 	goto_xy(500, 0, 1);
 	goto_xy(500, 500, 1);
@@ -34,6 +35,16 @@ void main(void)
 	while (1) {
 		gpio_toggle(RED_LED);
 		delay(16800000);
+		if (state.status==IDLE_MOTION){
+			debug("IDLE");
+		}
+		else if (state.status==MOVING){
+			debug("MOVING");
+		}
+		else debug("RANDOM");
+
 	}
+
+
 
 }

@@ -13,7 +13,8 @@ uint16_t y_coordinate_desired;
 uint16_t orientation_desired;
 char status_desired;
 
-
+volatile uint8_t moving_delay;
+volatile uint8_t hard_stop_flag=0;
 
 
 void set_position_and_orientation(int16_t x, int16_t y, int16_t orientation)
@@ -143,17 +144,19 @@ void goto_xy(int16_t x, int16_t y, int8_t direction)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
 
 	//state_desired.status=MOVING;
-	state_desired.x=x;
-	state_desired.y=y;
-
-	if (state.status!=IDLE_MOTION){
-		gpio_set(GREEN_LED);
+	if (!hard_stop_flag){
+		state_desired.x=x;
+		state_desired.y=y;
 	}
 
-	while(state.status!=IDLE_MOTION){
-		delay(100);
+	moving_delay=0;
+	while (moving_delay<5){
+		__asm__("nop");
 	}
 
+	while(state.status!=IDLE_MOTION || hard_stop_flag){
+		__asm__("nop");
+	}
 }
 
 void goto_xy_continue(int16_t x, int16_t y, int8_t direction)
@@ -170,6 +173,7 @@ void goto_xy_continue(int16_t x, int16_t y, int8_t direction)
 
 	for (int8_t i = 0; i < 7; ++i)
 		usart_send_blocking(MOTION_DRIVER, out_data[i]);
+
 }
 
 void curve(int16_t x, int16_t y, int8_t angle, int8_t angle_direction, int8_t direction)
@@ -195,6 +199,7 @@ void hard_stop(void)
 {
 	usart_send_blocking(MOTION_DRIVER, 'S');
 	state_desired.status=IDLE_MOTION;
+	hard_stop_flag=1;
 }
 
 void soft_stop(void)

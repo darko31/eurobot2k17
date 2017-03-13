@@ -10,6 +10,7 @@ void tim7_isr(void)
 
 		read_status_and_position();
 		//check_goal();
+		moving_delay++;
 
 		colour_shift_count();
 
@@ -29,6 +30,7 @@ void check_goal(){
 		&& ((state.y >= state_desired.y + HITBOX) || (state.y <= state_desired.y - HITBOX)))
 	{
 		goto_xy_continue(state_desired.x, state_desired.y, 1);
+		hard_stop_flag=0;
 
 	}
 

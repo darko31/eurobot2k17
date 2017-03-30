@@ -14,8 +14,6 @@ void tim7_isr(void)
 
 		colour_shift_count();
 
-		gpio_toggle(GPIOD, GPIO15);
-
 		/* Clear overflow interrupt flag. */
 		timer_clear_flag(TIM7, TIM_SR_UIF);
 

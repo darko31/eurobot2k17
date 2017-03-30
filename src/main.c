@@ -12,6 +12,7 @@
 #include "tasks/task_test_1.h"
 #include "tasks/task_test_2.h"
 #include "core/task_mngr.h"
+#include "executors/front_rollers/front_rollers.h"
 
 void main(void)
 {
@@ -25,24 +26,20 @@ void main(void)
 	ctor_test_2();
 
 	reset_driver();
-	set_motion_speed(40);
+	set_motion_speed(100);
 
-	state.status=IDLE_MOTION;
 //	task_mngr_run();
-	goto_xy(500, 0, 1);
-	goto_xy(500, 500, 1);
+
 
 	while (1) {
-		gpio_toggle(RED_LED);
-		delay(16800000);
-		if (state.status==IDLE_MOTION){
-			debug("IDLE");
-		}
-		else if (state.status==MOVING){
-			debug("MOVING");
-		}
-		else debug("RANDOM");
-
+		rollers_forward();
+		delay(100000000);
+		rollers_off();
+		delay(100000000);
+		rollers_reverse();
+		delay(100000000);
+		rollers_off();
+		delay(100000000);
 	}
 
 

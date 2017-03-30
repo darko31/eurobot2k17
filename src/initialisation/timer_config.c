@@ -95,7 +95,7 @@ static void timer7_config(void)
 	timer_enable_update_event(TIM7);
 	timer_enable_irq(TIM7, TIM_DIER_UIE);
 	timer_enable_counter(TIM7);
-	nvic_set_priority(NVIC_TIM7_IRQ, 1);
+	nvic_set_priority(NVIC_TIM7_IRQ, 15);
 	nvic_enable_irq(NVIC_TIM7_IRQ);
 	timer_enable_irq(TIM7, TIM_DIER_UIE);
 }

@@ -12,10 +12,12 @@ void rollers_off(void)
 
 void rollers_reverse(void)
 {
+	rollers_on();
     dc_motor_direction(DC_REVERSE);
 }
 
 void rollers_forward(void)
 {
+	rollers_on();
     dc_motor_direction(DC_FORWARD);
 }

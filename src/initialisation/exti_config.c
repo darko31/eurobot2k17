@@ -4,7 +4,7 @@ void exti_config(void)
 {
 	/*Note: if a sensor input is not used, it should be disabled here */
 
-	nvic_set_priority(NVIC_EXTI0_IRQ, 2);
+	nvic_set_priority(NVIC_EXTI0_IRQ, 16);
 	/* Enable EXTI interrupt. */
 	nvic_enable_irq(NVIC_EXTI0_IRQ);
 	nvic_enable_irq(NVIC_EXTI2_IRQ);

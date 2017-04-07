@@ -1,23 +1,16 @@
 #include "front_rollers.h"
 
-void rollers_on(void)
-{
-    dc_motor_switch(DC_ON);
-}
-
 void rollers_off(void)
 {
-    dc_motor_switch(DC_OFF);
+    dc_motor_off();
 }
 
 void rollers_reverse(void)
 {
-	rollers_on();
     dc_motor_direction(DC_REVERSE);
 }
 
 void rollers_forward(void)
 {
-	rollers_on();
     dc_motor_direction(DC_FORWARD);
 }
